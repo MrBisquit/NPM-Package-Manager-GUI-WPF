@@ -30,6 +30,7 @@
                 <MenuItem Header="Project">
                     <MenuItem Header="Open project" Name="MMPOP" Click="MMPOP_Click"></MenuItem>
                     <MenuItem Header="New project"></MenuItem>
+                    <MenuItem Header="Reload project" Name="MMPRP" Click="MMPRP_Click"></MenuItem>
                 </MenuItem>
                 <MenuItem Header="Package"></MenuItem>
                 <MenuItem Header="Edit"></MenuItem>
@@ -38,7 +39,7 @@
 
             <Rectangle Grid.Column="1" Fill="#F0F0F0" RadiusX="5" RadiusY="5" Width="100"></Rectangle>
             <WrapPanel Grid.Column="1" HorizontalAlignment="Center">
-                <ComboBox SelectedIndex="0" Padding="5" Background="Transparent" Name="Scripts">
+                <ComboBox Width="68" Padding="5" Background="Transparent" Name="Scripts">
                     <ComboBoxItem>Script 1</ComboBoxItem>
                     <ComboBoxItem>Script 2</ComboBoxItem>
                     <ComboBoxItem>Script 3</ComboBoxItem>

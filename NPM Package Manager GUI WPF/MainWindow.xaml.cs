@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Ookii.Dialogs.Wpf;
 using System.IO;
+using System.Security.Cryptography;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -65,22 +66,42 @@ namespace NPM_Package_Manager_GUI_WPF
                 Actions.CheckProjectState.HasAllPackagesInstalled(PackageFile, PackagePath);
 
                 ProjectLoaded = true;
+                ReloadUI();
             }
         }
+
+        public void ReloadProject() => PackageFile = JsonConvert.DeserializeObject<Types.PackageJson>(File.ReadAllText(PackagePath));
 
         public void ReloadUI()
         {
             if(ProjectLoaded)
             {
-                Scripts.SelectedIndex = 0;
                 Scripts.IsEnabled = true;
                 RunButton.IsEnabled = true;
+
+                Scripts.Items.Clear();
+
+                foreach (var script in PackageFile.Scripts)
+                {
+                    Scripts.Items.Add(script.Key);
+                }
+
+                Scripts.Items.Refresh();
+
+                Scripts.SelectedIndex = 0;
             } else
             {
                 Scripts.SelectedIndex = -1;
                 Scripts.IsEnabled = false;
                 RunButton.IsEnabled = false;
             }
+        }
+
+        private void MMPRP_Click(object sender, RoutedEventArgs e)
+        {
+            ReloadProject();
+            OpenPage(new Pages.Packages(this));
+            ReloadUI();
         }
     }
 }

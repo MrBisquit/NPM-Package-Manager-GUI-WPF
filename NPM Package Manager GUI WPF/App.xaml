@@ -18,6 +18,7 @@
         </Style>
         <Style TargetType="ComboBoxItem">
             <Setter Property="BorderThickness" Value="0"></Setter>
+            <Setter Property="Background" Value="Transparent"></Setter>
         </Style>
         <Style TargetType="ListView">
             <Setter Property="BorderThickness" Value="0"></Setter>
