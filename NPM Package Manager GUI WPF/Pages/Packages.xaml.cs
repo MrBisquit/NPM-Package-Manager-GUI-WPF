@@ -159,5 +159,10 @@ namespace NPM_Package_Manager_GUI_WPF.Pages
                 mainWindow.SBProgressSpinner.Visibility = Visibility.Collapsed;
             }
         }
+
+        private void Remove_Click(object sender, RoutedEventArgs e)
+        {
+            mainWindow.RemoveSpecfic((string)List.Items[List.SelectedIndex]);
+        }
     }
 }

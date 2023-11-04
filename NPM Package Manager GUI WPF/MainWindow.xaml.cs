@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using NPM_Package_Manager_GUI_WPF.Actions;
 using Ookii.Dialogs.Wpf;
 using System.IO;
 using System.Security.Cryptography;
@@ -232,6 +233,78 @@ namespace NPM_Package_Manager_GUI_WPF
             if(CurrentPage != SearchResults) OpenPage(SearchResults);
 
             SearchResults.UpdateSearchText(SearchBox.Text);
+        }
+
+        private void MMPaRI_Click(object sender, RoutedEventArgs e)
+        {
+            UpdateProgress("Installing packages...", 0, 1);
+            bool IsYarn = SelectedCLI.Items[SelectedCLI.SelectedIndex] == "Yarn";
+
+            Task.Factory.StartNew(() =>
+            {
+                Actions.RunCommand.RunInstall(PackagePath.Substring(0, PackagePath.Length - "package.json".Length), IsYarn, false);
+                Dispatcher.Invoke(() =>
+                {
+                    UpdateProgress("Installing packages...", 0, 0);
+                });
+            }).ContinueWith((Task task) =>
+            {
+                Dispatcher.Invoke(new Action(() =>
+                {
+                    UpdateProgress();
+
+                    ReloadProject();
+                    ReloadUI();
+                }));
+            });
+        }
+
+        public void InstallSpecific(string PackageName)
+        {
+            UpdateProgress($"Installing {PackageName}...", 0, 1);
+            bool IsYarn = SelectedCLI.Items[SelectedCLI.SelectedIndex] == "Yarn";
+
+            Task.Factory.StartNew(() =>
+            {
+                RunCommand.RunInstallSpecific(PackagePath.Substring(0, PackagePath.Length - "package.json".Length), IsYarn, false, (string)PackageName);
+                Dispatcher.Invoke(() =>
+                {
+                    UpdateProgress($"Installing {PackageName}...", 0, 0);
+                });
+            }).ContinueWith((Task task) =>
+            {
+                Dispatcher.Invoke(new Action(() =>
+                {
+                    UpdateProgress();
+
+                    ReloadProject();
+                    ReloadUI();
+                }));
+            });
+        }
+
+        public void RemoveSpecfic(string PackageName)
+        {
+            UpdateProgress($"Removing {PackageName}...", 0, 1);
+            bool IsYarn = SelectedCLI.Items[SelectedCLI.SelectedIndex] == "Yarn";
+
+            Task.Factory.StartNew(() =>
+            {
+                RunCommand.RunRemoveSpecific(PackagePath.Substring(0, PackagePath.Length - "package.json".Length), IsYarn, false, (string)PackageName);
+                Dispatcher.Invoke(() =>
+                {
+                    UpdateProgress($"Removing {PackageName}...", 0, 0);
+                });
+            }).ContinueWith((Task task) =>
+            {
+                Dispatcher.Invoke(new Action(() =>
+                {
+                    UpdateProgress();
+
+                    ReloadProject();
+                    ReloadUI();
+                }));
+            });
         }
     }
 }

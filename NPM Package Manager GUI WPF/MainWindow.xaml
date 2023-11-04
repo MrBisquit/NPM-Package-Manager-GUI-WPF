@@ -34,7 +34,9 @@
                     <MenuItem Header="Unload project" Name="MMPUP" Click="MMPUP_Click"></MenuItem>
                     <MenuItem Header="Reload project" Name="MMPRP" Click="MMPRP_Click"></MenuItem>
                 </MenuItem>
-                <MenuItem Header="Package" Name="MMPa"></MenuItem>
+                <MenuItem Header="Package" Name="MMPa">
+                    <MenuItem Header="Run Install" Name="MMPaRI" Click="MMPaRI_Click"></MenuItem>
+                </MenuItem>
                 <MenuItem Header="Edit" Name="MME">
                     <MenuItem Header="Project Information" Name="MMEPI" Click="MMEPI_Click"></MenuItem>
                 </MenuItem>

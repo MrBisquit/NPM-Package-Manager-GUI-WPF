@@ -1,7 +1,9 @@
 ﻿using Newtonsoft.Json;
+using NPM_Package_Manager_GUI_WPF.Actions;
 using NPM_Package_Manager_GUI_WPF.Types;
 using System;
 using System.Collections.Generic;
+using System.IO.Packaging;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -110,6 +112,11 @@ namespace NPM_Package_Manager_GUI_WPF.Pages
                 List.Items.Add(result.Package.Name);
             }
             List.Items.Refresh();
+        }
+
+        private void InstallVersion_Click(object sender, RoutedEventArgs e)
+        {
+            mainWindow.InstallSpecific((string)List.Items[List.SelectedIndex]);
         }
     }
 }
