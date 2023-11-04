@@ -19,7 +19,23 @@
 
         <Rectangle Grid.Column="1" Margin="3" Fill=" #F0F0F0" RadiusX="5" RadiusY="5"></Rectangle>
         <Grid Grid.Column="1" Margin="8">
-            <TextBlock FontSize="15" Name="PackageName">Loading...</TextBlock>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            
+            <StackPanel Grid.Column="0">
+                <TextBlock FontSize="15" Name="PackageName">Loading...</TextBlock>
+                <TextBlock FontSize="10" Name="PackageVersion">0.0.0 -> 0.0.0</TextBlock>
+                <TextBlock FontSize="10" Name="PackageAuthor">By Unknown</TextBlock>
+                <TextBlock Name="PackageDescription">Loading...</TextBlock>
+            </StackPanel>
+
+            <StackPanel Grid.Column="1">
+                <Button Padding="5" Name="ChangeVersion">Change version</Button>
+                <Button Padding="5" Name="Upgrade">Upgrade</Button>
+                <Button Padding="5" Name="Remove">Remove</Button>
+            </StackPanel>
         </Grid>
     </Grid>
 </Page>

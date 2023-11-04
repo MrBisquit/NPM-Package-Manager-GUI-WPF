@@ -26,16 +26,41 @@ namespace NPM_Package_Manager_GUI_WPF
         }
 
         public Page CurrentPage;
+        public Page LastPage;
+        public Pages.SearchResults SearchResults;
 
         public Types.PackageJson PackageFile = new Types.PackageJson();
         public string PackagePath = "";
 
         public bool ProjectLoaded = false;
 
+        public Types.Config config = new Types.Config();
+
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             ReloadUI();
             OpenPage(new Pages.NoProject(this));
+            UpdateProgress();
+
+            if(Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\NPM Package Manager GUI WPF\\"))
+            {
+                if(File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\NPM Package Manager GUI WPF\\config.json"))
+                {
+                    config = JsonConvert.DeserializeObject<Types.Config>(File.ReadAllText(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\NPM Package Manager GUI WPF\\config.json"));
+                    if(config.LastOpenedPackagePath != string.Empty)
+                    {
+                        PackageFile = config.LastOpenedPackageFile;
+                        PackagePath = config.LastOpenedPackagePath;
+                        ProjectLoaded = true;
+
+                        ReloadUI();
+                        OpenPage(new Pages.Packages(this));
+                    }
+                }
+            } else
+            {
+                Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\NPM Package Manager GUI WPF\\");
+            }
         }
 
         private void MMPOP_Click(object sender, RoutedEventArgs e)
@@ -45,8 +70,14 @@ namespace NPM_Package_Manager_GUI_WPF
 
         public void OpenPage(Page page)
         {
+            LastPage = CurrentPage;
             CurrentPage = page;
             CurrentFrame.Content = CurrentPage.Content;
+        }
+
+        public void BackPage()
+        {
+            OpenPage(LastPage);
         }
 
         public void OpenProject()
@@ -59,9 +90,11 @@ namespace NPM_Package_Manager_GUI_WPF
             if ((bool)ofd.ShowDialog())
             {
                 PackageFile = JsonConvert.DeserializeObject<Types.PackageJson>(File.ReadAllText(ofd.FileName));
-                Title = $"NPM Package Manager GUI WPF - {PackageFile.Name}";
                 OpenPage(new Pages.Packages(this));
                 PackagePath = ofd.FileName;
+
+                config.LastOpenedPackagePath = PackagePath;
+                config.LastOpenedPackageFile = PackageFile;
 
                 Actions.CheckProjectState.HasAllPackagesInstalled(PackageFile, PackagePath);
 
@@ -89,11 +122,65 @@ namespace NPM_Package_Manager_GUI_WPF
                 Scripts.Items.Refresh();
 
                 Scripts.SelectedIndex = 0;
+
+                Title = $"NPM Package Manager GUI WPF - {PackageFile.Name}";
+
+                MMPUP.IsEnabled = true;
+                MMPRP.IsEnabled = true;
+
+                MMEPI.IsEnabled = true;
+
+                MMPa.IsEnabled = true;
+                MME.IsEnabled = true;
+                MMV.IsEnabled = true;
+
+                if(File.Exists(PackagePath + "\\..\\yarn.lock"))
+                {
+                    SelectedCLI.SelectedIndex = 1;
+                    SCLIYarn.IsEnabled = true;
+                } else
+                {
+                    SelectedCLI.SelectedIndex = 0;
+                    SCLIYarn.IsEnabled = false;
+                }
             } else
             {
                 Scripts.SelectedIndex = -1;
                 Scripts.IsEnabled = false;
                 RunButton.IsEnabled = false;
+
+                Title = $"NPM Package Manager GUI WPF - No Project open";
+
+                MMPUP.IsEnabled = false;
+                MMPRP.IsEnabled = false;
+
+                MMEPI.IsEnabled = false;
+
+                MMPa.IsEnabled = false;
+                MME.IsEnabled = false;
+                MMV.IsEnabled = false;
+
+                SelectedCLI.SelectedIndex = 0;
+                SCLIYarn.IsEnabled = false;
+            }
+        }
+
+        public void UpdateProgress(string? text = null, int? value = null, int? maximum = null)
+        {
+            if(text == null && value == null && maximum == null)
+            {
+                SBProgressBar.Visibility = Visibility.Collapsed;
+                SBProgressSpinner.Visibility = Visibility.Collapsed;
+
+                SBProgressText.Text = "Ready";
+            } else
+            {
+                SBProgressBar.Visibility = Visibility.Visible;
+                SBProgressSpinner.Visibility = Visibility.Visible;
+
+                SBProgressText.Text = text;
+                SBProgressBar.Value = (int)value;
+                SBProgressBar.Maximum = (int)maximum;
             }
         }
 
@@ -102,6 +189,49 @@ namespace NPM_Package_Manager_GUI_WPF
             ReloadProject();
             OpenPage(new Pages.Packages(this));
             ReloadUI();
+        }
+
+        private void MMEPI_Click(object sender, RoutedEventArgs e)
+        {
+            OpenPage(new Pages.ProjectInformation(this));
+        }
+
+        private async void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            ProjectLoaded = false;
+            ReloadUI();
+            OpenPage(new Pages.NoProject(this));
+            if (!Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\NPM Package Manager GUI WPF\\"))
+            {
+                Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\NPM Package Manager GUI WPF\\");
+            }
+
+            File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\NPM Package Manager GUI WPF\\config.json", JsonConvert.SerializeObject(config));
+        }
+
+        private void MMPUP_Click(object sender, RoutedEventArgs e)
+        {
+            ProjectLoaded = false;
+            ReloadUI();
+            OpenPage(new Pages.NoProject(this));
+
+            PackageFile = null;
+            PackagePath = null;
+
+            config.LastOpenedPackagePath = string.Empty;
+            config.LastOpenedPackageFile = null;
+        }
+
+        private void SearchBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if(SearchResults == null)
+            {
+                SearchResults = new Pages.SearchResults(this);
+            }
+
+            if(CurrentPage != SearchResults) OpenPage(SearchResults);
+
+            SearchResults.UpdateSearchText(SearchBox.Text);
         }
     }
 }

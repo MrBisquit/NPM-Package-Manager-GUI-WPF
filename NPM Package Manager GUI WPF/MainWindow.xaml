@@ -7,7 +7,8 @@
         xmlns:local="clr-namespace:NPM_Package_Manager_GUI_WPF"
         mc:Ignorable="d"
         Title="NPM Package Manager GUI WPF - No Project open" Height="450" Width="800"
-        Loaded="Window_Loaded">
+        Loaded="Window_Loaded"
+        Closing="Window_Closing">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"></RowDefinition>
@@ -24,17 +25,20 @@
 
             <Rectangle Grid.Column="0" Fill="#F0F0F0" RadiusX="5" RadiusY="5"></Rectangle>
             <Menu Grid.Column="0" Padding="5" Background="Transparent">
-                <MenuItem Header="File">
+                <MenuItem Header="File" Name="MMF">
                     <MenuItem Header="Open folder"></MenuItem>
                 </MenuItem>
-                <MenuItem Header="Project">
+                <MenuItem Header="Project" Name="MMP">
                     <MenuItem Header="Open project" Name="MMPOP" Click="MMPOP_Click"></MenuItem>
                     <MenuItem Header="New project"></MenuItem>
+                    <MenuItem Header="Unload project" Name="MMPUP" Click="MMPUP_Click"></MenuItem>
                     <MenuItem Header="Reload project" Name="MMPRP" Click="MMPRP_Click"></MenuItem>
                 </MenuItem>
-                <MenuItem Header="Package"></MenuItem>
-                <MenuItem Header="Edit"></MenuItem>
-                <MenuItem Header="View"></MenuItem>
+                <MenuItem Header="Package" Name="MMPa"></MenuItem>
+                <MenuItem Header="Edit" Name="MME">
+                    <MenuItem Header="Project Information" Name="MMEPI" Click="MMEPI_Click"></MenuItem>
+                </MenuItem>
+                <MenuItem Header="View" Name="MMV"></MenuItem>
             </Menu>
 
             <Rectangle Grid.Column="1" Fill="#F0F0F0" RadiusX="5" RadiusY="5" Width="100"></Rectangle>
@@ -48,7 +52,7 @@
             </WrapPanel>
 
             <Rectangle Grid.Column="2" Fill="#F0F0F0" RadiusX="5" RadiusY="5"></Rectangle>
-            <TextBox Grid.Column="2" Width="250" Padding="5" Background="Transparent"></TextBox>
+            <TextBox Grid.Column="2" Width="250" Padding="5" Background="Transparent" Name="SearchBox" TextChanged="SearchBox_TextChanged"></TextBox>
         </Grid>
 
         <Grid Grid.Row="1">
@@ -67,9 +71,9 @@
                 <fa:ImageAwesome Icon="CircleOutlineNotch" Spin="True" Width="15" Height="15" Name="SBProgressSpinner" Visibility="Collapsed"></fa:ImageAwesome>
             </StatusBar>
 
-            <ComboBox Grid.Column="1" SelectedIndex="0">
-                <ComboBoxItem>NPM</ComboBoxItem>
-                <ComboBoxItem IsEnabled="False">Yarn</ComboBoxItem>
+            <ComboBox Grid.Column="1" SelectedIndex="0" Name="SelectedCLI">
+                <ComboBoxItem Name="SCLINPM">NPM</ComboBoxItem>
+                <ComboBoxItem Name="SCLIYarn" IsEnabled="False">Yarn</ComboBoxItem>
             </ComboBox>
         </Grid>
     </Grid>
