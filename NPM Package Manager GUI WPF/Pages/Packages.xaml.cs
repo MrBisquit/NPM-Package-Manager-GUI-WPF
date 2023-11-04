@@ -78,6 +78,8 @@ namespace NPM_Package_Manager_GUI_WPF.Pages
 
         private async void LoadPackageInfo(string packagename)
         {
+            string CurrentVersion = "";
+
             // Blank out data that isn't loaded yet
             PackageAuthor.Text = "";
             PackageDescription.Text = "";
@@ -113,6 +115,7 @@ namespace NPM_Package_Manager_GUI_WPF.Pages
                             string CutVersion = PackageVersion.Text.Substring(1);
 
                             string Version = CutVersion;
+                            CurrentVersion = CutVersion;
                             string[] SplitVersion = Version.Split('.');
                             string[] SplitNewVersion = PackageData.Version.Split('.');
 
@@ -148,6 +151,47 @@ namespace NPM_Package_Manager_GUI_WPF.Pages
                     {
                         PackageAuthor.Text = $"By Unknown";
                         PackageDescription.Text = "";
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Failed to fetch package from registry.npmjs.org.\n" + await response.Content.ReadAsStringAsync(), "NPM Package Manger GUI WPF - Error");
+                }
+
+                mainWindow.SBProgressText.Text = "Ready";
+                mainWindow.SBProgressSpinner.Visibility = Visibility.Collapsed;
+            }
+
+            using (HttpClient client = new HttpClient())
+            {
+                client.DefaultRequestHeaders.UserAgent.ParseAdd("NPM Package Manager GUI WPF"); // Probably not the best UserAgent
+                var response = await client.GetAsync($"https://registry.npmjs.org/{packagename}/");
+                if (response.IsSuccessStatusCode)
+                {
+                    string content = await response.Content.ReadAsStringAsync();
+                    RegistryVersions VersionsData = JsonConvert.DeserializeObject<RegistryVersions>(content);
+
+                    Versions.Items.Clear();
+
+                    foreach (var version in VersionsData.Versions)
+                    {
+                        if(version.Value.Deprecated != null && !mainWindow.config.AllowDepricatedPackageVersion)
+                        {
+                            Versions.Items.Add(new ComboBoxItem() { Content = version.Key, IsEnabled = false });
+                        } else
+                        {
+                            Versions.Items.Add(new ComboBoxItem() { Content = version.Key });
+                        }
+                    }
+
+                    Versions.Items.Refresh();
+
+                    for (int i = 0; i < Versions.Items.Count; i++)
+                    {
+                        if (((ComboBoxItem)Versions.Items[i]).Content == CurrentVersion)
+                        {
+                            Versions.SelectedIndex = i;
+                        }
                     }
                 }
                 else

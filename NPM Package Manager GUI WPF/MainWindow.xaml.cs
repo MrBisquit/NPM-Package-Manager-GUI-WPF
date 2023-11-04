@@ -306,5 +306,10 @@ namespace NPM_Package_Manager_GUI_WPF
                 }));
             });
         }
+
+        private void MMEAS_Click(object sender, RoutedEventArgs e)
+        {
+            OpenPage(new Pages.Settings(this));
+        }
     }
 }

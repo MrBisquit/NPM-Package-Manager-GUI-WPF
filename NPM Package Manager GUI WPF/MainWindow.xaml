@@ -39,6 +39,7 @@
                 </MenuItem>
                 <MenuItem Header="Edit" Name="MME">
                     <MenuItem Header="Project Information" Name="MMEPI" Click="MMEPI_Click"></MenuItem>
+                    <MenuItem Header="Application Settings" Name="MMEAS" Click="MMEAS_Click"></MenuItem>
                 </MenuItem>
                 <MenuItem Header="View" Name="MMV"></MenuItem>
             </Menu>
