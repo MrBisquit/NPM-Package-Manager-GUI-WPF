@@ -67,5 +67,24 @@ namespace NPM_Package_Manager_GUI_WPF.Actions
             process.Start();
             process.WaitForExit();
         }
+
+        public static void RunInstallSpecificVersion(string Path, bool UseYarn, bool IsDebug, string PackageName, string Version)
+        {
+            Process process = new Process()
+            {
+                StartInfo = new ProcessStartInfo()
+                {
+                    FileName = UseYarn ? "yarn" : "npm",
+                    Arguments = UseYarn ? $"add {PackageName}@{Version}" : $"install {PackageName}@{Version}",
+                    CreateNoWindow = !IsDebug,
+                    WindowStyle = IsDebug ? ProcessWindowStyle.Normal : ProcessWindowStyle.Hidden,
+                    WorkingDirectory = Path,
+                    UseShellExecute = true
+                }
+            };
+
+            process.Start();
+            process.WaitForExit();
+        }
     }
 }

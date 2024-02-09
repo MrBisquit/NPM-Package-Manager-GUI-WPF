@@ -73,7 +73,11 @@ namespace NPM_Package_Manager_GUI_WPF.Pages
 
         private void List_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            LoadPackageInfo((string)List.Items[List.SelectedIndex]);
+            try
+            {
+                LoadPackageInfo((string)List.Items[List.SelectedIndex]);
+            }
+            catch (Exception ex) { }
         }
 
         private async void LoadPackageInfo(string packagename)
@@ -173,7 +177,7 @@ namespace NPM_Package_Manager_GUI_WPF.Pages
 
                     Versions.Items.Clear();
 
-                    foreach (var version in VersionsData.Versions)
+                    /*foreach (var version in VersionsData.Versions)
                     {
                         if(version.Value.Deprecated != null && !mainWindow.config.AllowDepricatedPackageVersion)
                         {
@@ -182,6 +186,28 @@ namespace NPM_Package_Manager_GUI_WPF.Pages
                         {
                             Versions.Items.Add(new ComboBoxItem() { Content = version.Key });
                         }
+                    }*/
+
+                    List<string> VersionNames = new List<string>();
+
+                    foreach(var version in VersionsData.Versions)
+                    {
+                        VersionNames.Add(version.Key);
+                    }
+
+                    VersionNames.Reverse();
+
+                    foreach (var version in VersionNames)
+                    {
+                        ComboBoxItem item = new ComboBoxItem() { Content =  version };
+
+                        RegistryVersion _version = VersionsData.Versions[version];
+                        if(_version.Deprecated != null && !mainWindow.config.AllowDepricatedPackageVersion)
+                        {
+                            item.IsEnabled = false;
+                        }
+
+                        Versions.Items.Add(item);
                     }
 
                     Versions.Items.Refresh();
@@ -207,6 +233,35 @@ namespace NPM_Package_Manager_GUI_WPF.Pages
         private void Remove_Click(object sender, RoutedEventArgs e)
         {
             mainWindow.RemoveSpecfic((string)List.Items[List.SelectedIndex]);
+        }
+
+        private void ChangeVersion_Click(object sender, RoutedEventArgs e)
+        {
+            mainWindow.ChangeSpecific((string)List.Items[List.SelectedIndex], (string)((ComboBoxItem)Versions.Items[Versions.SelectedIndex]).Content);
+        }
+
+        private void Upgrade_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                mainWindow.ChangeSpecific((string)List.Items[List.SelectedIndex], (string)((ComboBoxItem)Versions.Items[Versions.Items.Count - 1]).Content);
+            } catch { }
+        }
+
+        public void Reload()
+        {
+            RefreshList();
+            try
+            {
+                LoadPackageInfo((string)List.Items[List.SelectedIndex]);
+            } catch { }
+        }
+
+        private void ViewPackage_Click(object sender, RoutedEventArgs e)
+        {
+            ViewPackage vp = new ViewPackage();
+            vp.Initialise(PackageName.Text);
+            mainWindow.OpenPage(vp);
         }
     }
 }

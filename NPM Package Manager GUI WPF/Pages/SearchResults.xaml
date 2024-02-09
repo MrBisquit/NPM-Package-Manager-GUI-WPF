@@ -43,6 +43,7 @@
 
                 <StackPanel Grid.Column="1">
                     <Button Padding="5" Name="InstallVersion" Click="InstallVersion_Click">Install</Button>
+                    <Button Padding="5" Name="InstallSpecificVersion" Click="InstallSpecificVersion_Click">Install specific version</Button>
                 </StackPanel>
             </Grid>
         </Grid>

@@ -28,6 +28,8 @@ namespace NPM_Package_Manager_GUI_WPF.Pages
             this.mainWindow = mainWindow;
 
             ADPV.IsChecked = mainWindow.config.AllowDepricatedPackageVersion;
+            TBOPF.IsChecked = mainWindow.config.TakeBackupsOfProjectFiles;
+            DM.IsChecked = mainWindow.config.DebugMode;
         }
 
         private void ADPV_Click(object sender, RoutedEventArgs e)
@@ -38,6 +40,16 @@ namespace NPM_Package_Manager_GUI_WPF.Pages
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
             mainWindow.BackPage();
+        }
+
+        private void TBOPF_Click(object sender, RoutedEventArgs e)
+        {
+            mainWindow.config.TakeBackupsOfProjectFiles = (bool)TBOPF.IsChecked;
+        }
+
+        private void DM_Click(object sender, RoutedEventArgs e)
+        {
+            mainWindow.config.DebugMode = (bool)DM.IsChecked;
         }
     }
 }

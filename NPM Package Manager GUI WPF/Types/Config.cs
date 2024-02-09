@@ -11,5 +11,7 @@ namespace NPM_Package_Manager_GUI_WPF.Types
         public PackageJson LastOpenedPackageFile { get; set; } = new PackageJson();
         public string LastOpenedPackagePath { get; set; } = string.Empty;
         public bool AllowDepricatedPackageVersion {  get; set; } = false;
+        public bool TakeBackupsOfProjectFiles { get; set; } = true;
+        public bool DebugMode { get; set; } = false;
     }
 }

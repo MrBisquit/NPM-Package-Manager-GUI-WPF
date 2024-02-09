@@ -1,0 +1,38 @@
+﻿<Window x:Class="NPM_Package_Manager_GUI_WPF.Popups.InstallSpecific"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:NPM_Package_Manager_GUI_WPF.Popups"
+        mc:Ignorable="d"
+        Title="InstallSpecific" Height="450" Width="800"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent">
+    <Grid>
+        <Rectangle Fill="#171717" Opacity="0.75"></Rectangle>
+        <Rectangle VerticalAlignment="Center" HorizontalAlignment="Center" Width="350" Height="200" Fill="White" RadiusX="5" RadiusY="5"></Rectangle>
+        <Grid VerticalAlignment="Center" HorizontalAlignment="Center" Width="350" Height="200">
+            <Grid Margin="8">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                </Grid.RowDefinitions>
+
+                <TextBlock FontSize="25" Name="CurrentPackageName">...</TextBlock>
+
+                <StackPanel Grid.Row="1">
+                    <TextBlock>Please select a version to install:</TextBlock>
+                    <ComboBox Name="Versions"></ComboBox>
+                </StackPanel>
+
+                <WrapPanel Grid.Row="2" HorizontalAlignment="Right">
+                    <Button Padding="5" Name="Cancel" Click="Cancel_Click">Cancel</Button>
+                    <Label></Label>
+                    <Button Padding="5" Name="Install" Click="Install_Click">Install</Button>
+                </WrapPanel>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>

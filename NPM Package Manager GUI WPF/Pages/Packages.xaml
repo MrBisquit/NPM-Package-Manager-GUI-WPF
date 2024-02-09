@@ -33,9 +33,11 @@
 
             <StackPanel Grid.Column="1">
                 <ComboBox Name="Versions"></ComboBox>
-                <Button Padding="5" Name="ChangeVersion">Change version</Button>
-                <Button Padding="5" Name="Upgrade">Upgrade</Button>
+                <Button Padding="5" Name="ChangeVersion" Click="ChangeVersion_Click">Change version</Button>
+                <Button Padding="5" Name="Upgrade" Click="Upgrade_Click">Upgrade</Button>
                 <Button Padding="5" Name="Remove" Click="Remove_Click">Remove</Button>
+                <Label></Label>
+                <Button Padding="5" Name="ViewPackage" Click="ViewPackage_Click">View package</Button>
             </StackPanel>
         </Grid>
     </Grid>

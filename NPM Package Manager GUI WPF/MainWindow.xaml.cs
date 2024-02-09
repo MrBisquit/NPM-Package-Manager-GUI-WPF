@@ -39,6 +39,10 @@ namespace NPM_Package_Manager_GUI_WPF
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            Globals.MainWindow = this;
+
+            Queue.Init(this);
+
             ReloadUI();
             OpenPage(new Pages.NoProject(this));
             UpdateProgress();
@@ -62,6 +66,10 @@ namespace NPM_Package_Manager_GUI_WPF
             {
                 Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\NPM Package Manager GUI WPF\\");
             }
+
+            ReloadProject();
+            ReloadUI();
+            OpenPage(new Pages.Packages(this));
         }
 
         private void MMPOP_Click(object sender, RoutedEventArgs e)
@@ -74,6 +82,11 @@ namespace NPM_Package_Manager_GUI_WPF
             LastPage = CurrentPage;
             CurrentPage = page;
             CurrentFrame.Content = CurrentPage.Content;
+        }
+
+        private void ReloadPage()
+        {
+            // Does nothing I guess (Placeholder)
         }
 
         public void BackPage()
@@ -237,7 +250,17 @@ namespace NPM_Package_Manager_GUI_WPF
 
         private void MMPaRI_Click(object sender, RoutedEventArgs e)
         {
-            UpdateProgress("Installing packages...", 0, 1);
+            bool IsYarn = SelectedCLI.Items[SelectedCLI.SelectedIndex] == "Yarn";
+            Queue.AddToQueue(new Queue.QueueAction()
+            {
+                ActionText = "Installing packages...",
+                Action = new Action(() =>
+                {
+                    RunCommand.RunInstall(PackagePath.Substring(0, PackagePath.Length - "package.json".Length), IsYarn, config.DebugMode);
+                })
+            });
+
+            /*UpdateProgress("Installing packages...", 0, 1);
             bool IsYarn = SelectedCLI.Items[SelectedCLI.SelectedIndex] == "Yarn";
 
             Task.Factory.StartNew(() =>
@@ -254,14 +277,24 @@ namespace NPM_Package_Manager_GUI_WPF
                     UpdateProgress();
 
                     ReloadProject();
-                    ReloadUI();
+                    ReloadPage();
                 }));
-            });
+            });*/
         }
 
         public void InstallSpecific(string PackageName)
         {
-            UpdateProgress($"Installing {PackageName}...", 0, 1);
+            bool IsYarn = SelectedCLI.Items[SelectedCLI.SelectedIndex] == "Yarn";
+            Queue.AddToQueue(new Queue.QueueAction()
+            {
+                ActionText = "Installing package...",
+                Action = new Action(() =>
+                {
+                    RunCommand.RunInstallSpecific(PackagePath.Substring(0, PackagePath.Length - "package.json".Length), IsYarn, config.DebugMode, (string)PackageName);
+                })
+            });
+
+            /*UpdateProgress($"Installing {PackageName}...", 0, 1);
             bool IsYarn = SelectedCLI.Items[SelectedCLI.SelectedIndex] == "Yarn";
 
             Task.Factory.StartNew(() =>
@@ -278,19 +311,29 @@ namespace NPM_Package_Manager_GUI_WPF
                     UpdateProgress();
 
                     ReloadProject();
-                    ReloadUI();
+                    ReloadPage();
                 }));
-            });
+            });*/
         }
 
         public void RemoveSpecfic(string PackageName)
         {
-            UpdateProgress($"Removing {PackageName}...", 0, 1);
+            bool IsYarn = SelectedCLI.Items[SelectedCLI.SelectedIndex] == "Yarn";
+            Queue.AddToQueue(new Queue.QueueAction()
+            {
+                ActionText = "Removing package...",
+                Action = new Action(() =>
+                {
+                    RunCommand.RunRemoveSpecific(PackagePath.Substring(0, PackagePath.Length - "package.json".Length), IsYarn, config.DebugMode, PackageName);
+                })
+            });
+
+            /*UpdateProgress($"Removing {PackageName}...", 0, 1);
             bool IsYarn = SelectedCLI.Items[SelectedCLI.SelectedIndex] == "Yarn";
 
             Task.Factory.StartNew(() =>
             {
-                RunCommand.RunRemoveSpecific(PackagePath.Substring(0, PackagePath.Length - "package.json".Length), IsYarn, false, (string)PackageName);
+                RunCommand.RunRemoveSpecific(PackagePath.Substring(0, PackagePath.Length - "package.json".Length), IsYarn, false, PackageName);
                 Dispatcher.Invoke(() =>
                 {
                     UpdateProgress($"Removing {PackageName}...", 0, 0);
@@ -302,9 +345,43 @@ namespace NPM_Package_Manager_GUI_WPF
                     UpdateProgress();
 
                     ReloadProject();
-                    ReloadUI();
+                    ReloadPage();
                 }));
+            });*/
+        }
+
+        public void ChangeSpecific(string PackageName, string Version)
+        {
+            bool IsYarn = SelectedCLI.Items[SelectedCLI.SelectedIndex] == "Yarn";
+            Queue.AddToQueue(new Queue.QueueAction()
+            {
+                ActionText = "Changing package version...",
+                Action = new Action(() =>
+                {
+                    RunCommand.RunInstallSpecificVersion(PackagePath.Substring(0, PackagePath.Length - "package.json".Length), IsYarn, config.DebugMode, PackageName, Version);
+                })
             });
+
+            /*UpdateProgress($"Changing {PackageName}'s version...", 0, 1);
+            bool IsYarn = SelectedCLI.Items[SelectedCLI.SelectedIndex] == "Yarn";
+
+            Task.Factory.StartNew(() =>
+            {
+                RunCommand.RunInstallSpecificVersion(PackagePath.Substring(0, PackagePath.Length - "package.json".Length), IsYarn, false, PackageName, Version);
+                Dispatcher.Invoke(() =>
+                {
+                    UpdateProgress($"Changing {PackageName}'s version...", 0, 0);
+                });
+            }).ContinueWith((Task task) =>
+            {
+                Dispatcher.Invoke(new Action(() =>
+                {
+                    UpdateProgress();
+
+                    ReloadProject();
+                    ReloadPage();
+                }));
+            });*/
         }
 
         private void MMEAS_Click(object sender, RoutedEventArgs e)

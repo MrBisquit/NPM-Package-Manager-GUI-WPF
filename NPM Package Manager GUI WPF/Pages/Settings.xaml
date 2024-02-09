@@ -32,6 +32,8 @@
                             General
                         </Label>
                         <CheckBox Name="ADPV" Click="ADPV_Click">Allow depricated package versions</CheckBox>
+                        <CheckBox Name="TBOPF" Click="TBOPF_Click" IsChecked="True" IsEnabled="False">Take backups of project files (Not implemented)</CheckBox>
+                        <CheckBox Name="DM" Click="DM_Click">Debug mode (Showns comamnd prompt)</CheckBox>
                     </StackPanel>
 
                     <StackPanel Grid.Column="1">

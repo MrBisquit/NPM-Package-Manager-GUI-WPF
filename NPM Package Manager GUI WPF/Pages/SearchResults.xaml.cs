@@ -118,5 +118,12 @@ namespace NPM_Package_Manager_GUI_WPF.Pages
         {
             mainWindow.InstallSpecific((string)List.Items[List.SelectedIndex]);
         }
+
+        private void InstallSpecificVersion_Click(object sender, RoutedEventArgs e)
+        {
+            Popups.InstallSpecific installSpecific = new Popups.InstallSpecific();
+            installSpecific.Initialise((string)List.Items[List.SelectedIndex]);
+            installSpecific.ShowDialog();
+        }
     }
 }
