@@ -244,7 +244,8 @@ namespace NPM_Package_Manager_GUI_WPF.Pages
         {
             try
             {
-                mainWindow.ChangeSpecific((string)List.Items[List.SelectedIndex], (string)((ComboBoxItem)Versions.Items[Versions.Items.Count - 1]).Content);
+                //mainWindow.ChangeSpecific((string)List.Items[List.SelectedIndex], (string)((ComboBoxItem)Versions.Items[Versions.Items.Count - 1]).Content);
+                mainWindow.ChangeSpecific((string)List.Items[List.SelectedIndex], (string)((ComboBoxItem)Versions.Items[0]).Content);
             } catch { }
         }
 
